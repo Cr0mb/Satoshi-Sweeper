@@ -17,8 +17,11 @@ It generates mnemonic phrases, derives Bitcoin addresses (Legacy, Nested SegWit,
 
 ## Requirements
 
-``python3``
+- python3
 ```
 pip install requests colorama bip-utils
 ```
 
+
+## Disclaimer
+> This script is for educational and research purposes only. The author is not responsible for any misuse or unethical activities performed using this tool.
